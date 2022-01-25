@@ -12,10 +12,33 @@ export default function useAuth(code) {
         code,
       })
       .then((res) => {
-        console.log(res);
+        setAccessToken(res.data.accessToken);
+        setRefreshToken(res.data.refreshToken);
+        setExpiresIn(res.data.expiresIn);
       })
       .catch(() => {
         window.location = "/";
       });
   }, [code]);
+
+  useEffect(() => {
+    if (!refreshToken || !expiresIn) return; //make sure they are set before running this useEffect
+    const timeout = setInterval(() => {
+      axios
+        .post("http://localhost:3001/refresh", {
+          refreshToken,
+        })
+        .then((res) => {
+          setAccessToken(res.data.accessToken);
+          setExpiresIn(res.data.expiresIn);
+        })
+        .catch(() => {
+          window.location = "/";
+        });
+    }, (expiresIn - 60) * 1000);
+
+    return () => clearInterval(timeout); //in case refresh token refreshes before timeout, reset
+  }, [refreshToken, expiresIn]);
+
+  return accessToken;
 }

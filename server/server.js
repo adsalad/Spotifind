@@ -7,16 +7,36 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.post("/login", (req, res) => {
-  const code = req.body.code;
-
-  var credentials = {
+app.post("/refresh", (req, res) => {
+  const refreshToken = req.body.refreshToken;
+  const spotifyAPI = new SpotifyWebApi({
     clientId: process.env.REACT_APP_CLIENT_ID,
     clientSecret: process.env.REACT_APP_CLIENT_SECRET,
     redirectUri: process.env.REACT_APP_REDIRECT_URI,
-  };
+    refreshToken, //passed back down to useAuth
+  });
 
-  const spotifyAPI = new SpotifyWebApi(credentials);
+  spotifyAPI.refreshAccessToken().then(
+    (data) => {
+      res.json({
+        accessToken: data.body.access_token,
+        expiresIn: data.body.expires_in,
+      });
+    },
+    (err) => {
+      console.log(err);
+      res.sendStatus(400);
+    }
+  );
+});
+
+app.post("/login", (req, res) => {
+  const code = req.body.code;
+  const spotifyAPI = new SpotifyWebApi({
+    clientId: process.env.REACT_APP_CLIENT_ID,
+    clientSecret: process.env.REACT_APP_CLIENT_SECRET,
+    redirectUri: process.env.REACT_APP_REDIRECT_URI,
+  });
 
   spotifyAPI
     .authorizationCodeGrant(code)
@@ -32,5 +52,7 @@ app.post("/login", (req, res) => {
       res.sendStatus(400);
     });
 });
+
+app.post("/refresh", (req, rest) => {});
 
 app.listen(3001);
