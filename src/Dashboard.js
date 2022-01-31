@@ -35,7 +35,6 @@ export default function Dashboard({ code }) {
       })
       .then((res) => {
         setLyrics(res.data);
-        console.log(lyrics);
       });
   });
 
