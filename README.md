@@ -9,3 +9,4 @@ Spotifind is a web application that allows users to retrieve the lyrics of their
 * React.js
 * Express
 * Spotify API
+* REST API
