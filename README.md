@@ -1,5 +1,5 @@
 
-# Paragraphs
+# Spotifind
 Spotifind is a web application that allows users to retrieve the lyrics of their favourite songs!
 
 # Demo
