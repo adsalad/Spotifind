@@ -7,10 +7,23 @@ const AUTH_URL =
 export default function Login() {
   return (
     <Container
+      fluid
       className="d-flex justify-content-center align-items-center"
-      style={{ minHeight: "100vh" }}
+      style={{ minHeight: "100vh", backgroundColor: "black" }}
     >
-      <a className="btn btn-success btn-lg" href={AUTH_URL}>
+      <a
+        className="btn"
+        href={AUTH_URL}
+        style={{
+          backgroundColor: "#1DB954",
+          display: "flex",
+          width: "300px",
+          height: "100px",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: 30,
+        }}
+      >
         Login with Spotify
       </a>
     </Container>

@@ -1,11 +1,13 @@
 require("dotenv").config();
 const express = require("express");
 const SpotifyWebApi = require("spotify-web-api-node");
+const lyricsFinder = require("lyrics-finder");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/refresh", (req, res) => {
   const refreshToken = req.body.refreshToken;
@@ -13,7 +15,7 @@ app.post("/refresh", (req, res) => {
     clientId: process.env.REACT_APP_CLIENT_ID,
     clientSecret: process.env.REACT_APP_CLIENT_SECRET,
     redirectUri: process.env.REACT_APP_REDIRECT_URI,
-    refreshToken, //passed back down to useAuth
+    refreshToken, //passed back down to useAuth to regain access to resource server
   });
 
   spotifyAPI.refreshAccessToken().then(
@@ -53,6 +55,13 @@ app.post("/login", (req, res) => {
     });
 });
 
-app.post("/refresh", (req, rest) => {});
+app.get("/lyrics", async (req, res) => {
+  const lyrics =
+    (await lyricsFinder(req.query.artist, req.query.track)) ||
+    "No Lyrics Retrieved";
+    console.log(lyrics);
+
+  res.json(lyrics);
+});
 
 app.listen(3001);
