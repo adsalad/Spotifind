@@ -24,6 +24,7 @@ export default function Dashboard({ code }) {
     setLyrics("");
   }
 
+  //get lyrics for playing track
   useEffect(() => {
     if (!playingTrack) return;
     axios
@@ -38,10 +39,12 @@ export default function Dashboard({ code }) {
       });
   });
 
+  //set our access token for passing around and safe checking
   useEffect(() => {
     if (!accessToken) return;
     spotifyAPI.setAccessToken(accessToken);
   }, [accessToken]);
+
 
   useEffect(() => {
     if (!search) return setSearchResults([]);

@@ -9,6 +9,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//refresh token so user does not have to sign in after 3600 seconds
 app.post("/refresh", (req, res) => {
   const refreshToken = req.body.refreshToken;
   const spotifyAPI = new SpotifyWebApi({
@@ -32,6 +33,7 @@ app.post("/refresh", (req, res) => {
   );
 });
 
+//retreive OAuth tokens to securely gain access to Spotify API 
 app.post("/login", (req, res) => {
   const code = req.body.code;
   const spotifyAPI = new SpotifyWebApi({
@@ -55,7 +57,9 @@ app.post("/login", (req, res) => {
     });
 });
 
+//retreive lyrics from API
 app.get("/lyrics", async (req, res) => {
+  console.log(req)
   const lyrics =
     (await lyricsFinder(req.query.artist, req.query.track)) ||
     "No Lyrics Retrieved";
